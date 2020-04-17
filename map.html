@@ -78,7 +78,6 @@
 
         map = new google.maps.Map(mapCanvas, mapOptions);
 
-
         // This event listener will call addMarker() when the map is clicked.
         map.addListener('click', function(event) {
           addMarker(event.latLng);
@@ -94,7 +93,10 @@
           map: map,
           label: {
             text: location.lable,
-            color: "#fff",
+            color: "#000",
+            fontSize: "20pt",
+            fontWeight: "bold",
+            backgroundColor:"#fff"
           },
           icon: {
             url: "http://maps.google.com/mapfiles/ms/icons/"+location.icon
