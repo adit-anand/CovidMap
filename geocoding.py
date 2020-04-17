@@ -1,14 +1,31 @@
+from bs4 import BeautifulSoup
 import requests
 import json
+import urllib
 
 filePath = "Covid-19.csv" #original
 filePathWithGeo = "Covid-19-geo.csv" #with geo data
 filePathGeocodesOnly = "geocodes.txt" #Geocodes
+geocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=SECRETKEY&address="
+dataSrcBaseUrls = "https://github.com/MinCiencia/Datos-COVID19/tree/master/output/producto4"
 
-geocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDRVlOny0TLwFDTYkHhKBKMdW8iJXLLpmg&address="
+def getLatestDataSrcUrl():
+	req = requests.get(dataSrcBaseUrls, requests.utils.default_headers())
+	soup = BeautifulSoup(req.content, 'html.parser')
+	dataFileUrls = []
+	dataFileUrlLatest = ""
+	for a in soup.find_all('a', href=True):
+		if a['href'].endswith(".csv"):
+			dataFileUrls.append(str(a['href']))
+	dataFileUrlLatest = "https://raw.githubusercontent.com" + dataFileUrls[len(dataFileUrls)-1].replace("/blob","")
+	print("Found the latest data file:", dataFileUrlLatest)
+	return dataFileUrlLatest
+
+def getLatestDataSrcFileByUrl():
+	urllib.request.urlretrieve(getLatestDataSrcUrl(),"Covid-19.csv")
+
 
 counter = 0;
-
 with open(filePath, "r") as f:
 	next(f) 
 	for line in f:
@@ -16,11 +33,8 @@ with open(filePath, "r") as f:
 		break
 
 		counter = counter + 1
-		if counter < 62:
-			continue
-
 		lineArr = [x.strip() for x in line.split(',')] # convert line string to array
-		address = lineArr[0]+' '+lineArr[1]+' '+lineArr[2]+' '+lineArr[3] # extract address info
+		address = lineArr[0] # extract address info
 
 		r = requests.get(geocodeUrl+address) # get geocoding data by address
 		data = json.loads(r.content) # convert string to json
@@ -31,7 +45,6 @@ with open(filePath, "r") as f:
 		else:
 			print(address)
 
-		#{'results': [{'address_components': [{'long_name': 'Arica', 'short_name': 'Arica', 'types': ['locality', 'political']}, {'long_name': 'Arica', 'short_name': 'Arica', 'types': ['administrative_area_level_3', 'political']}, {'long_name': 'Arica Province', 'short_name': 'Arica Province', 'types': ['administrative_area_level_2', 'political']}, {'long_name': 'Arica y Parinacota', 'short_name': 'Arica y Parinacota', 'types': ['administrative_area_level_1', 'political']}, {'long_name': 'Chile', 'short_name': 'CL', 'types': ['country', 'political']}], 'formatted_address': 'Arica, Arica y Parinacota, Chile', 'geometry': {'bounds': {'northeast': {'lat': -18.4228594, 'lng': -70.2445165}, 'southwest': {'lat': -18.522094, 'lng': -70.33377879999999}}, 'location': {'lat': -18.4782534, 'lng': -70.3125988}, 'location_type': 'APPROXIMATE', 'viewport': {'northeast': {'lat': -18.4228594, 'lng': -70.2445165}, 'southwest': {'lat': -18.522094, 'lng': -70.33377879999999}}}, 'partial_match': True, 'place_id': 'ChIJNcIy2YqpWpERHdfYBGyI9Sc', 'types': ['locality', 'political']}], 'status': 'OK'}
 		lat = data["results"][0]["geometry"]["location"]["lat"]
 		lng = data["results"][0]["geometry"]["location"]["lng"]
 
