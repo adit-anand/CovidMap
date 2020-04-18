@@ -45,13 +45,22 @@
       .orange {
         background-color: #ffa726
       }
+      .files {
+        width: 100%;
+        border-radius: 3px;
+        height: 24px;
+        margin-bottom: 5px;
+      }
     </style>
   </head>
   <body>
     <div id="floating-panel">
+      <select class="files" id="covidFileOptions" onchange="getCovidData(this.value);"></select> <br>
       <input class="blue button" onclick="showTotalCovidCases();" type=button value="Casos totales">
       <input class="orange button" onclick="showRecentCovidCases();" type=button value="Casos nuevos">
       <input class="red button" onclick="showDCovidCases();" type=button value="Casos fallecidos">
+      <br>
+      <span style="font-family: arial">Covid data from:</span><span id="dateId" style="font-family: arial"></span>
     </div>
     <div id="map"></div>
     <script>
@@ -166,7 +175,6 @@
         }
       }
 
-
       function showDCovidCases() {
         deleteMarkers()
         for (var i = 0; i < locations.length; i++) {
@@ -182,17 +190,51 @@
         }
       }
 
-      $.ajax({
-          url: "Covid-19-geo.csv",
+      function getCovidData(file) {
+        // console.log("getCovidData",file, file.substring(0, 10));
+        $.ajax({
+          url: file,
           async: false,
           success: function (csv) {
             locations = csv.split("\n");
+            $("#dateId").text(file.substring(0, 10));
+            showTotalCovidCases();
           },
           dataType: "text",
-          complete: function () {
+          complete: function (file) {
               // call a function on complete 
           }
-      });
+        });
+      }
+
+      function setCovidData() {
+        // https://stackoverflow.com/questions/3066586/get-string-in-yyyymmdd-format-from-js-date-object
+        Date.prototype.yyyymmdd = function() {
+          var mm = this.getMonth() + 1; // getMonth() is zero-based
+          var dd = this.getDate();
+
+          return [this.getFullYear(),
+                  (mm>9 ? '' : '0') + mm,
+                  (dd>9 ? '' : '0') + dd
+                 ].join('-');
+        };
+
+        var d = new Date();
+
+        for( var i = 1; i<= 5; i++ ) {
+          d.setDate(d.getDate() - 1);
+          var fileName =  d.yyyymmdd()+"-CasosConfirmados-totalRegional-geo.csv"; 
+          $("#covidFileOptions").append($("<option>", {
+            value: fileName,
+            text: d.yyyymmdd()+" CasosConfirmados totalRegional"
+          }));
+          if (i == 1) {
+             getCovidData(fileName); // default to most recent file
+          }
+        }
+      }
+
+      setCovidData();
 
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRVlOny0TLwFDTYkHhKBKMdW8iJXLLpmg&callback=initMap"></script>
