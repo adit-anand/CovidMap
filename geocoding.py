@@ -5,8 +5,7 @@ import urllib
 from datetime import date, timedelta
 
 today = date.today().strftime("%Y-%m-%d")
-yesterday = (date.today() - timedelta(days=5)).strftime("%Y-%m-%d")
-print(today,yesterday)
+yesterday = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d")
 
 geocodingFile = "geocodes.txt" #Geocodes
 geocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=SECRETKEY&address="

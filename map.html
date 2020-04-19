@@ -55,10 +55,10 @@
   </head>
   <body>
     <div id="floating-panel">
-      <select class="files" id="covidFileOptions" onchange="getCovidData(this.value);"></select> <br>
-      <input class="blue button" onclick="showTotalCovidCases();" type=button value="Casos totales">
-      <input class="orange button" onclick="showRecentCovidCases();" type=button value="Casos nuevos">
-      <input class="red button" onclick="showDCovidCases();" type=button value="Casos fallecidos">
+      <select id="covidFileOptions" class="files"  onchange="getCovidData(this.value);"></select> <br>
+      <input id="showTotalCovidCasesId" class="blue button" onclick="showTotalCovidCases();" type=button>
+      <input id="showRecentCovidCasesId" class="orange button" onclick="showRecentCovidCases();" type=button>
+      <input id="showDCovidCasesId" class="red button" onclick="showDCovidCases();" type=button>
       <br>
       <span style="font-family: arial">Covid data from:</span><span id="dateId" style="font-family: arial"></span>
     </div>
@@ -145,9 +145,23 @@
         markers = [];
       }
 
+      function showButtonLabels() {
+        var totalRow = locations[locations.length-2].split(",");
+
+        var totalVal1 = totalRow[4];
+        $("#showTotalCovidCasesId").attr('value', 'Casos totales ('+totalVal1+')');
+
+        var totalVal2 = totalRow[3];
+        $("#showRecentCovidCasesId").attr('value', 'Casos nuevos ('+totalVal2+')');
+
+        var totalVal3 = totalRow[6];
+        $("#showDCovidCasesId").attr('value', 'Casos fallecidos ('+totalVal3+')');
+      }
+
       function showTotalCovidCases() {
         deleteMarkers()
-        for (var i = 0; i < locations.length; i++) {
+        showButtonLabels();
+        for (var i = 0; i < locations.length-2; i++) { // locations.length-2 slince last line contains total data
           row = locations[i].split(",")
           var l = {
               'name': 'Casos totales: ' + row[4],
@@ -162,10 +176,11 @@
 
       function showRecentCovidCases() {
         deleteMarkers()
-        for (var i = 0; i < locations.length; i++) {
+        showButtonLabels();
+        for (var i = 0; i < locations.length-2; i++) {
           row = locations[i].split(",")
           var l = {
-              'name': 'Casos nuevos: ' + row[4],
+              'name': 'Casos nuevos: ' + row[3],
               'adress': row[2],
               'location': new google.maps.LatLng(row[0], row[1]),
               'lable': row[3],
@@ -177,7 +192,8 @@
 
       function showDCovidCases() {
         deleteMarkers()
-        for (var i = 0; i < locations.length; i++) {
+        showButtonLabels();
+        for (var i = 0; i < locations.length-2; i++) {
           row = locations[i].split(",")
           var l = {
               'name': 'Casos fallecidos: ' + row[6],
