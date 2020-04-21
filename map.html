@@ -71,6 +71,8 @@
       var map;
       var markers = [];
       var locations = [];
+      
+      var totalVal1, totalVal2, totalVal3, totalType;
 
       function initMap() {
         var lat = -18.475,
@@ -79,7 +81,7 @@
 
         var mapOptions = {
           center: new google.maps.LatLng(lat, lng),
-          zoom: 3,
+          zoom: 5,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
@@ -90,6 +92,16 @@
         // This event listener will call addMarker() when the map is clicked.
         map.addListener('click', function(event) {
           addMarker(event.latLng);
+        });
+
+        map.addListener('zoom_changed', function(event) {
+          if (totalType == 1) {
+            showTotalCovidCases()
+          } else if (totalType == 2) {
+            showRecentCovidCases();
+          } else {
+            showDCovidCases();
+          }
         });
 
         showTotalCovidCases();    
@@ -104,7 +116,7 @@
             text: location.lable,
             color: "#000",
             fontSize: "16pt",
-            fontWeight: "bold",
+            fontWeight: "normal",
             backgroundColor:"#fff"
           },
           icon: {
@@ -148,66 +160,101 @@
       function showButtonLabels() {
         var totalRow = locations[locations.length-1].split(",");
 
-        var totalVal1 = totalRow[4];
+        totalVal1 = totalRow[4];
         $("#showTotalCovidCasesId").attr('value', 'Casos totales ('+totalVal1+')');
 
-        var totalVal2 = totalRow[3];
+        totalVal2 = totalRow[3];
         $("#showRecentCovidCasesId").attr('value', 'Casos nuevos ('+totalVal2+')');
 
-        var totalVal3 = totalRow[6];
+        totalVal3 = totalRow[6];
         $("#showDCovidCasesId").attr('value', 'Casos fallecidos ('+totalVal3+')');
       }
 
       function showTotalCovidCases() {
+        totalType = 1;
         deleteMarkers()
         showButtonLabels();
-        for (var i = 0; i < locations.length-2; i++) { // locations.length-2 slince last line contains total data
-          row = locations[i].split(",")
-          var l = {
-              'name': 'Casos totales: ' + row[4],
-              'adress': row[2],
-              'location': new google.maps.LatLng(row[0], row[1]),
-              'lable': row[4],
-              'icon': "blue-small.gif"
+        if (map.getZoom() < 5) {
+            var l = {
+              'name': 'Casos totales: ' + totalVal1,
+              'adress':'Chile',
+              'location': new google.maps.LatLng(-38.948921,-72.331113),
+              'lable': totalVal1,
+              'icon': "blue-big.gif"
             }
-          addMarker(l);
+            addMarker(l);
+        } else {
+          for (var i = 0; i < locations.length-2; i++) { // locations.length-2 slince last line contains total data
+            row = locations[i].split(",")
+            var l = {
+                'name': 'Casos totales: ' + row[4],
+                'adress': row[2],
+                'location': new google.maps.LatLng(row[0], row[1]),
+                'lable': row[4],
+                'icon': "blue-small.gif"
+              }
+            addMarker(l);
+          }
         }
       }
 
       function showRecentCovidCases() {
+        totalType = 2;
         deleteMarkers()
         showButtonLabels();
-        for (var i = 0; i < locations.length-2; i++) {
-          row = locations[i].split(",")
-          var l = {
-              'name': 'Casos nuevos: ' + row[3],
-              'adress': row[2],
-              'location': new google.maps.LatLng(row[0], row[1]),
-              'lable': row[3],
-              'icon': "yellow-small.gif"
+        if (map.getZoom() < 5) {
+            var l = {
+              'name': 'Casos nuevos: ' + totalVal2,
+              'adress':'Chile',
+              'location': new google.maps.LatLng(-38.948921,-72.331113),
+              'lable': totalVal2,
+              'icon': "yellow-big.gif"
             }
-          addMarker(l);
+            addMarker(l);
+        } else {
+          for (var i = 0; i < locations.length-2; i++) {
+            row = locations[i].split(",")
+            var l = {
+                'name': 'Casos nuevos: ' + row[3],
+                'adress': row[2],
+                'location': new google.maps.LatLng(row[0], row[1]),
+                'lable': row[3],
+                'icon': "yellow-small.gif"
+              }
+            addMarker(l);
+          }          
         }
       }
 
       function showDCovidCases() {
+        totalType = 3;
         deleteMarkers()
         showButtonLabels();
-        for (var i = 0; i < locations.length-2; i++) {
-          row = locations[i].split(",")
-          var l = {
-              'name': 'Casos fallecidos: ' + row[6],
-              'adress': row[2],
-              'location': new google.maps.LatLng(row[0], row[1]),
-              'lable': row[6],
-              'icon': "red-small.gif"
+        if (map.getZoom() < 5) {
+            var l = {
+              'name': 'Casos fallecidos: ' + totalVal3,
+              'adress':'Chile',
+              'location': new google.maps.LatLng(-38.948921,-72.331113),
+              'lable': totalVal3,
+              'icon': "red-big.gif"
             }
-          addMarker(l);
+            addMarker(l);
+        } else {
+          for (var i = 0; i < locations.length-2; i++) {
+            row = locations[i].split(",")
+            var l = {
+                'name': 'Casos fallecidos: ' + row[6],
+                'adress': row[2],
+                'location': new google.maps.LatLng(row[0], row[1]),
+                'lable': row[6],
+                'icon': "red-small.gif"
+              }
+            addMarker(l);
+          }    
         }
       }
 
       function getCovidData(file) {
-        // console.log("getCovidData",file, file.substring(0, 10));
         $.ajax({
           url: file,
           async: false,
@@ -216,7 +263,7 @@
             locations = l.filter(function (el) {
               return el != null;
             });
-            console.log(locations);
+            // console.log(locations);
             $("#dateId").text(file.substring(0, 10));
             showTotalCovidCases();
           },
