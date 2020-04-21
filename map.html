@@ -108,7 +108,7 @@
             backgroundColor:"#fff"
           },
           icon: {
-            url: "http://maps.google.com/mapfiles/ms/icons/"+location.icon
+            url: "./"+location.icon
           }
         });
 
@@ -168,7 +168,7 @@
               'adress': row[2],
               'location': new google.maps.LatLng(row[0], row[1]),
               'lable': row[4],
-              'icon': "blue-dot.png"
+              'icon': "blue-small.gif"
             }
           addMarker(l);
         }
@@ -184,7 +184,7 @@
               'adress': row[2],
               'location': new google.maps.LatLng(row[0], row[1]),
               'lable': row[3],
-              'icon': "orange-dot.png"
+              'icon': "yellow-small.gif"
             }
           addMarker(l);
         }
@@ -200,7 +200,7 @@
               'adress': row[2],
               'location': new google.maps.LatLng(row[0], row[1]),
               'lable': row[6],
-              'icon': "red-dot.png"
+              'icon': "red-small.gif"
             }
           addMarker(l);
         }

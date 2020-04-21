@@ -8,7 +8,7 @@ today = date.today().strftime("%Y-%m-%d")
 yesterday = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d")
 
 geocodingFile = "geocodes.txt" #Geocodes
-geocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=SECRETKEY&address="
+geocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=APIKEY&address="
 remoteCsvFile = "https://raw.githubusercontent.com/MinCiencia/Datos-COVID19/master/output/producto4/"+yesterday+"-CasosConfirmados-totalRegional.csv"
 localCsvFile = yesterday+"-CasosConfirmados-totalRegional.csv"
 localCsvGeoFile = yesterday+"-CasosConfirmados-totalRegional-geo.csv"
@@ -28,7 +28,7 @@ with open(localCsvFile, "r") as f:
 		address = lineArr[0] # extract address info
 
 		r = requests.get(geocodeUrl+address+" Chile") # get geocoding data by address and country 
-		data = json.loads(r.content) # convert string to json
+		data = json.loads(r.content.decode('utf-8')) # convert string to json
 
 		if len(data["results"]) == 0:
 			print(address+" (ZERO_RESULTS)")
