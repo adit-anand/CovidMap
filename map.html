@@ -212,7 +212,11 @@
           url: file,
           async: false,
           success: function (csv) {
-            locations = csv.split("\n");
+            var l = csv.split("\n");
+            locations = l.filter(function (el) {
+              return el != null;
+            });
+            console.log(locations);
             $("#dateId").text(file.substring(0, 10));
             showTotalCovidCases();
           },
