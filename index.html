@@ -71,6 +71,7 @@
       var map;
       var markers = [];
       var locations = [];
+      var infowindow;
       
       var totalVal1, totalVal2, totalVal3, totalType;
 
@@ -88,6 +89,10 @@
         var mapCanvas = document.getElementById('map');
 
         map = new google.maps.Map(mapCanvas, mapOptions);
+
+         infowindow = new google.maps.InfoWindow({
+            maxWidth: 350
+        });
 
         // This event listener will call addMarker() when the map is clicked.
         map.addListener('click', function(event) {
@@ -129,9 +134,6 @@
         });
 
         google.maps.event.addListener(marker, 'click', function() {
-          var infowindow = new google.maps.InfoWindow({
-            maxWidth: 350
-          });
           infowindow.setContent(location.name + "<br>" + location.adress);
           infowindow.open(map, marker);
         });
