@@ -107,9 +107,9 @@
           } else {
             showDCovidCases();
           }
-        });
-
-        showTotalCovidCases();    
+        });  
+      
+        showTotalCovidCases();  
       }
 
       function formatNumber(num) {
@@ -180,7 +180,7 @@
         totalType = 1;
         deleteMarkers()
         showButtonLabels();
-        if (map.getZoom() < 5) {
+        if (map && map.getZoom() < 5) {
             var l = {
               'name': 'Casos totales: ' + formatNumber(totalVal1),
               'adress':'Chile',
@@ -189,7 +189,7 @@
               'icon': "blue-big.gif"
             }
             addMarker(l);
-        } else {
+        } else if (typeof google !== "undefined") {
           for (var i = 0; i < locations.length-2; i++) { // locations.length-2 slince last line contains total data
             row = locations[i].split(",")
             var l = {
@@ -266,10 +266,7 @@
           async: false,
           success: function (csv) {
             var l = csv.split("\n");
-            locations = l.filter(function (el) {
-              return el != null;
-            });
-            // console.log(locations);
+            locations = l.filter(function(e){return e}); //remove all empty elements
             $("#dateId").text(file.substring(0, 10));
             showTotalCovidCases();
           },

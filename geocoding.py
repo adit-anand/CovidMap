@@ -8,7 +8,7 @@ today = date.today().strftime("%Y-%m-%d")
 yesterday = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d")
 
 geocodingFile = "geocodes.txt" #Geocodes
-geocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=APIKEY&address="
+geocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyByCDKitDba4dJAbLKZUGT8HCQOos2gqgc&address="
 remoteCsvFile = "https://raw.githubusercontent.com/MinCiencia/Datos-COVID19/master/output/producto4/"+yesterday+"-CasosConfirmados-totalRegional.csv"
 localCsvFile = yesterday+"-CasosConfirmados-totalRegional.csv"
 localCsvGeoFile = yesterday+"-CasosConfirmados-totalRegional-geo.csv"
