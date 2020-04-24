@@ -212,9 +212,9 @@
 
       function showTotalCovidCases() {
         totalType = 1;
-        deleteMarkers()
+        deleteMarkers();
         showButtonLabels();
-        if (map && map.getZoom() < 5) {
+        if (map && map.getZoom() < 5 && parseInt(totalVal1) > 0) {
             var l = {
               'name': 'Casos totales: ' + formatNumber(totalVal1),
               'adress':'Chile',
@@ -224,7 +224,8 @@
             }
             addMarker(l);
         } else if (typeof google !== "undefined") {
-          for (var i = 0; i < locations.length-2; i++) { // locations.length-2 slince last line contains total data
+          for (var i = 0; i < locations.length-2; i++) { // locations.length-2 slince last line contains total data     
+              
             row = locations[i].split(",")
             var l = {
                 'name': 'Casos totales: ' + formatNumber(row[4]),
@@ -232,10 +233,14 @@
                 'location': new google.maps.LatLng(row[0], row[1]),
                 'lable': formatNumber(row[4]),
                 'icon': "blue-small.gif"
+                }
+              
+              if(parseInt(row[4]) > 0)
+              {
+                addMarker(l);
               }
-            addMarker(l);
+            }
           }
-        }
       }
 
       function showRecentCovidCases() {
@@ -261,7 +266,11 @@
                 'lable': formatNumber(row[3]),
                 'icon': "yellow-small.gif"
               }
-            addMarker(l);
+            
+            if(parseInt(row[3]) > 0)
+            {
+              addMarker(l);
+            }
           }          
         }
       }
@@ -279,7 +288,7 @@
               'icon': "red-big.gif"
             }
             addMarker(l);
-        } else {
+        } else{
           for (var i = 0; i < locations.length-2; i++) {
             row = locations[i].split(",")
             var l = {
@@ -289,7 +298,11 @@
                 'lable': formatNumber(row[6]),
                 'icon': "red-small.gif"
               }
-            addMarker(l);
+
+            if(parseInt(row[6]) > 0)
+            {
+              addMarker(l);
+            }
           }    
         }
       }
