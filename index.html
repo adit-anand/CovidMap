@@ -69,6 +69,7 @@
       // The markers are stored in an array.
       // The user can then click an option to hide, show or delete the markers.
       var map;
+      var heatmap;
       var markers = [];
       var locations = [];
       var infowindow;
@@ -82,7 +83,7 @@
 
         var mapOptions = {
           center: new google.maps.LatLng(lat, lng),
-          zoom: 5,
+          zoom: 4,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
@@ -90,7 +91,12 @@
 
         map = new google.maps.Map(mapCanvas, mapOptions);
 
-         infowindow = new google.maps.InfoWindow({
+        heatmap = new google.maps.visualization.HeatmapLayer({
+          data: getPoints(),
+          map: map
+        });
+
+        infowindow = new google.maps.InfoWindow({
             maxWidth: 350
         });
 
@@ -107,9 +113,37 @@
           } else {
             showDCovidCases();
           }
-        });  
+        });
+
+        function toggleHeatmap() {
+          heatmap.setMap(heatmap.getMap() ? null : map);
+        }  
       
         showTotalCovidCases();  
+      }
+
+      function toggleHeatmap() {
+        heatmap.setMap(heatmap.getMap() ? null : map);
+      }
+
+      function getPoints() {
+        var heatmapLocations = [];
+        $.ajax({
+          url: "cl.csv",
+          async: false,
+          success: function (csv) {
+            var l = csv.split("\n");
+            for (var i=1; i<l.length; i++) {
+              var r = l[i].split(",");
+              heatmapLocations.push(new google.maps.LatLng(r[1], r[2]));
+            }
+          },
+          dataType: "text",
+          complete: function (file) {
+
+          }
+        });
+        return heatmapLocations; 
       }
 
       function formatNumber(num) {
@@ -307,6 +341,6 @@
       setCovidData();
 
     </script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRVlOny0TLwFDTYkHhKBKMdW8iJXLLpmg&callback=initMap"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRVlOny0TLwFDTYkHhKBKMdW8iJXLLpmg&libraries=visualization&callback=initMap"></script>
   </body>
 </html>
