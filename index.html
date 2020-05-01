@@ -228,14 +228,14 @@
               
             row = locations[i].split(",")
             var l = {
-                'name': 'Casos totales: ' + formatNumber(row[4]),
+                'name': 'Casos totales: ' + formatNumber(row[5]),
                 'adress': row[2],
                 'location': new google.maps.LatLng(row[0], row[1]),
-                'lable': formatNumber(row[4]),
+                'lable': formatNumber(row[5]),
                 'icon': "blue-small.gif"
                 }
               
-              if(parseInt(row[4]) > 0)
+              if(parseInt(row[5]) > 0)
               {
                 addMarker(l);
               }
@@ -292,14 +292,14 @@
           for (var i = 0; i < locations.length-2; i++) {
             row = locations[i].split(",")
             var l = {
-                'name': 'Casos fallecidos: ' + formatNumber(row[6]),
+                'name': 'Casos fallecidos: ' + formatNumber(row[7]),
                 'adress': row[2],
                 'location': new google.maps.LatLng(row[0], row[1]),
-                'lable': formatNumber(row[6]),
+                'lable': formatNumber(row[7]),
                 'icon': "red-small.gif"
               }
 
-            if(parseInt(row[6]) > 0)
+            if(parseInt(row[7]) > 0)
             {
               addMarker(l);
             }
