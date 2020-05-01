@@ -200,10 +200,10 @@
       function showButtonLabels() {
         var totalRow = locations[locations.length-1].split(",");
 
-        totalVal1 = totalRow[5];
+        totalVal1 = totalRow[3];
         $("#showTotalCovidCasesId").attr('value', 'Casos totales ('+formatNumber(totalVal1)+')');
 
-        totalVal2 = totalRow[3];
+        totalVal2 = totalRow[5];
         $("#showRecentCovidCasesId").attr('value', 'Casos nuevos ('+formatNumber(totalVal2)+')');
 
         totalVal3 = totalRow[7];
@@ -228,14 +228,14 @@
               
             row = locations[i].split(",")
             var l = {
-                'name': 'Casos totales: ' + formatNumber(row[5]),
+                'name': 'Casos totales: ' + formatNumber(row[3]),
                 'adress': row[2],
                 'location': new google.maps.LatLng(row[0], row[1]),
                 'lable': formatNumber(row[5]),
                 'icon': "blue-small.gif"
                 }
               
-              if(parseInt(row[5]) > 0)
+              if(parseInt(row[3]) > 0)
               {
                 addMarker(l);
               }
@@ -260,14 +260,14 @@
           for (var i = 0; i < locations.length-2; i++) {
             row = locations[i].split(",")
             var l = {
-                'name': 'Casos nuevos: ' + formatNumber(row[3]),
+                'name': 'Casos nuevos: ' + formatNumber(row[5]),
                 'adress': row[2],
                 'location': new google.maps.LatLng(row[0], row[1]),
                 'lable': formatNumber(row[3]),
                 'icon': "yellow-small.gif"
               }
             
-            if(parseInt(row[3]) > 0)
+            if(parseInt(row[5]) > 0)
             {
               addMarker(l);
             }
