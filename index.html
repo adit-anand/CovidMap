@@ -200,13 +200,13 @@
       function showButtonLabels() {
         var totalRow = locations[locations.length-1].split(",");
 
-        totalVal1 = totalRow[4];
+        totalVal1 = totalRow[5];
         $("#showTotalCovidCasesId").attr('value', 'Casos totales ('+formatNumber(totalVal1)+')');
 
         totalVal2 = totalRow[3];
         $("#showRecentCovidCasesId").attr('value', 'Casos nuevos ('+formatNumber(totalVal2)+')');
 
-        totalVal3 = totalRow[6];
+        totalVal3 = totalRow[7];
         $("#showDCovidCasesId").attr('value', 'Casos fallecidos ('+formatNumber(totalVal3)+')');
       }
 
